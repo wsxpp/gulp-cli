@@ -4,7 +4,8 @@ const babel = require('gulp-babel');
 const autoprefixer = require('gulp-autoprefixer');
 const cssBase64 = require('gulp-css-base64');
 const browserSync = require('browser-sync');
-const del = require('del')
+const del = require('del');
+const cleanCSS = require('gulp-clean-css');
 
 gulp.task('default', function () {
 
@@ -29,18 +30,21 @@ gulp.task('compile-es6', function () {
 })
 
 gulp.task('build', ['compile-css', 'compile-es6', 'clean'], function () {
-  gulp.src('*.html')
-    .pipe(gulp.dest('dist'));
-  gulp.src('js/*.js')
-    .pipe(gulp.dest('dist/js'));
-  gulp.src('images/*.*')
-    .pipe(gulp.dest('dist/images'));
-  gulp.src('css/*.css')
-    .pipe(cssBase64({
-      maxWeightResource: 1024 * 10,
-      extensionsAllowed: ['.gif', '.jpg', '.png']
-    }))
-    .pipe(gulp.dest('dist/css'));
+  setTimeout(() => {
+    gulp.src('*.html')
+      .pipe(gulp.dest('dist'));
+    gulp.src('js/*.js')
+      .pipe(gulp.dest('dist/js'));
+    gulp.src('images/*.*')
+      .pipe(gulp.dest('dist/images'));
+    gulp.src('css/*.css')
+      .pipe(cssBase64({
+        maxWeightResource: 1024 * 10,
+        extensionsAllowed: ['.gif', '.jpg', '.png']
+      }))
+      .pipe(cleanCSS({ compatibility: 'ie8' }))
+      .pipe(gulp.dest('dist/css'));
+  }, 1000)
 })
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
