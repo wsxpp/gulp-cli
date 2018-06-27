@@ -49,7 +49,7 @@ gulp.task('build', ['compile-css', 'compile-es6', 'clean'], function () {
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
   browserSync.init({
-    files: ['css/*.css'],
+    files: ['css/*.css', '*.html', 'js/*.js'],
     server: {
       baseDir: './',  // 设置服务器的根目录
       index: 'index.html' // 指定默认打开的文件
