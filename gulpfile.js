@@ -6,13 +6,11 @@ const cssBase64 = require('gulp-css-base64');
 const browserSync = require('browser-sync');
 const del = require('del');
 const cleanCSS = require('gulp-clean-css');
-
-gulp.task('default', function () {
-
-})
+const rev = require('gulp-rev');
+const revCollector = require('gulp-rev-collector');
 
 gulp.task('compile-css', function () {
-  gulp.src('stylus/!(_)*.styl')
+  return gulp.src('stylus/!(_)*.styl')
     .pipe(stylus())
     .pipe(autoprefixer({
       browsers: ['last 2 versions'],
@@ -22,29 +20,11 @@ gulp.task('compile-css', function () {
 })
 
 gulp.task('compile-es6', function () {
-  gulp.src('es2015/*.*')
+  return gulp.src('es2015/*.*')
     .pipe(babel({
       presets: ['env']
     }))
     .pipe(gulp.dest('js'))
-})
-
-gulp.task('build', ['compile-css', 'compile-es6', 'clean'], function () {
-  setTimeout(() => {
-    gulp.src('*.html')
-      .pipe(gulp.dest('dist'));
-    gulp.src('js/*.js')
-      .pipe(gulp.dest('dist/js'));
-    gulp.src('images/*.*')
-      .pipe(gulp.dest('dist/images'));
-    gulp.src('css/*.css')
-      .pipe(cssBase64({
-        maxWeightResource: 1024 * 10,
-        extensionsAllowed: ['.gif', '.jpg', '.png']
-      }))
-      .pipe(cleanCSS({ compatibility: 'ie8' }))
-      .pipe(gulp.dest('dist/css'));
-  }, 1000)
 })
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
@@ -62,7 +42,42 @@ gulp.task('serve', ['compile-css', 'compile-es6'], function () {
 });
 
 gulp.task('clean', function () {
-  del.sync('dist');
+  return del.sync('dist');
 })
 
+gulp.task('build-css', ['compile-css'], function () {
+  return gulp.src('css/*.css')
+    .pipe(cssBase64({
+      maxWeightResource: 1024 * 10,
+      extensionsAllowed: ['.gif', '.jpg', '.png']
+    }))
+    .pipe(cleanCSS({ compatibility: 'ie8' }))
+    .pipe(rev())
+    .pipe(gulp.dest('dist/css'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('rev/css'));
+})
 
+gulp.task('build-js', ['compile-es6'], function () {
+  return gulp.src('js/*.js')
+    .pipe(rev())
+    .pipe(gulp.dest('dist/js'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('rev/js'));
+})
+
+gulp.task('build-images', ['clean'], function () {
+  return gulp.src(['images/*.jpg','images/*/*.jpg'])
+    .pipe(rev())
+    .pipe(gulp.dest('dist/images'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('rev/images'));
+})
+
+gulp.task('build', ['build-css', 'build-js', 'build-images'], function () {
+  return gulp.src(['rev/**/*.json', '*.html'])
+    .pipe(revCollector({
+      replaceReved: true
+    }))
+    .pipe(gulp.dest('dist'));
+})
