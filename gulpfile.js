@@ -67,7 +67,7 @@ gulp.task('build-js', ['compile-es6'], function () {
 })
 
 gulp.task('build-images', ['clean'], function () {
-  return gulp.src(['images/*.jpg','images/*/*.jpg'])
+  return gulp.src(['images/*.jpg','images/*/*.png','images/*/*.gif'])
     .pipe(rev())
     .pipe(gulp.dest('dist/images'))
     .pipe(rev.manifest())
