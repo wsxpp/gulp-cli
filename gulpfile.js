@@ -54,7 +54,7 @@ gulp.task('build-images', ['clean'], function () {
 })
 
 gulp.task('build-css', ['compile-css', 'build-images'], function () {
-  return gulp.src(['rev/images/*.json', 'css/*.css'])
+  return gulp.src(['rev/**/*.json', 'css/*.css'])
     .pipe(cssBase64({
       maxWeightResource: 1024 * 10,
       extensionsAllowed: ['.gif', '.jpg', '.png']
@@ -70,7 +70,7 @@ gulp.task('build-css', ['compile-css', 'build-images'], function () {
 })
 
 gulp.task('build-js', ['compile-es6', 'build-css'], function () {
-  return gulp.src(['rev/images/*.json', 'js/*.js'])
+  return gulp.src(['rev/**/*.json', 'js/*.js'])
     .pipe(revCollector({
       replaceReved: true
     }))
