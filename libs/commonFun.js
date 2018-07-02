@@ -1,7 +1,7 @@
 /**
  * 滚动穿透处理
  */
-!function(){
+!function () {
   var style = document.createElement("style");
   style.innerHTML = 'body.modal-open {position: fixed;width: 100%;}';
   document.head.appendChild(style);
@@ -38,3 +38,11 @@ var Mask = (function () {
     }
   };
 })();
+
+/**
+ * 返回一个元素的计算属性
+ */
+function getElementComputerStyle(selector, attribute) {
+  var element = document.querySelector(selector);
+  return parseFloat(window.getComputedStyle(element, null)[attribute]);
+}
