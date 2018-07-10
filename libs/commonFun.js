@@ -42,7 +42,21 @@ var Mask = (function () {
 /**
  * 返回一个元素的计算属性
  */
-function getElementComputerStyle(selector, attribute) {
+function getStyle(selector, attribute) {
   var element = document.querySelector(selector);
-  return parseFloat(window.getComputedStyle(element, null)[attribute]);
+  return window.getComputedStyle(element, null)[attribute];
+}
+
+/**
+ * 手机号格式校验
+ */
+String.prototype.checkTel = function () {
+  return /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/.test(this)
+}
+
+/**
+ * 身份证格式校验
+ */
+String.prototype.checkIdcard = function () {
+  return /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(this)
 }
