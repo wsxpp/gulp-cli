@@ -103,7 +103,7 @@ gulp.task('build-js', ['compile-es6', 'build-css'], function () {
 })
 
 gulp.task('build', ['build-js'], function () {
-  gulp.srr('libs/**.*')
+  gulp.src('libs/**.*')
     .pipe(gulp.dest('dist/libs'))
   if (needRev) {
     return gulp.src(['rev/**/*.json', '*.html'])
