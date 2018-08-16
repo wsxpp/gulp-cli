@@ -39,7 +39,7 @@ gulp.task('serve', ['compile-css', 'compile-es6'], function () {
     // proxy: 'localhost', // 设置本地服务器的地址
     port: 3000  // 指定访问服务器的端口号
   });
-  gulp.watch('stylus/!(_)*.styl', ['compile-css'])
+  gulp.watch('stylus/*.styl', ['compile-css'])
   gulp.watch('es2015/*.js', ['compile-es6'])
 });
 
