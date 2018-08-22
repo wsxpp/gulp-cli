@@ -8,6 +8,11 @@ const del = require('del');
 const cleanCSS = require('gulp-clean-css');
 const rev = require('gulp-rev');
 const revCollector = require('gulp-rev-collector');
+const browserify = require("browserify");
+// const sourcemaps = require("gulp-sourcemaps");
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+
 
 const needRev = false;
 
@@ -22,11 +27,24 @@ gulp.task('compile-css', function () {
 })
 
 gulp.task('compile-es6', function () {
-  return gulp.src('es2015/*.*')
+  // return gulp.src('es2015/*.*')
+  //   .pipe(babel({
+  //     presets: ['env']
+  //   }))
+  //   .pipe(gulp.dest('js'))
+  var b = browserify({
+    entries: "es2015/index.js", //入口点js
+    debug: true //是告知Browserify在运行同时生成内联sourcemap用于调试
+  });
+  return b.bundle()
+    .pipe(source("index.js"))
+    .pipe(buffer())
     .pipe(babel({
       presets: ['env']
     }))
-    .pipe(gulp.dest('js'))
+    // .pipe(sourcemaps.init({ loadMaps: true }))
+    // .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest("js"));
 })
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
