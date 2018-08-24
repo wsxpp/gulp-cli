@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0,minimum-scale=1.0">
@@ -8,9 +9,47 @@
   <link rel="stylesheet" href="css/style.css">
   <title>Document</title>
 </head>
+
 <body>
-  <div class="container">
-    
+  <div class="index-container" style="background-image:url(images/bg-b-1.jpg)">
+    <div class="title"></div>
   </div>
+  <div class="props-box">
+    <div class="switch-bar">
+      <div class="option active" data-class="box-1">场景</div>
+      <div class="option" data-class="box-2">人物</div>
+      <div class="option" data-class="box-3">宠物</div>
+      <div class="option" data-class="box-4">摆件</div>
+      <div class="arrow"></div>
+    </div>
+    <div class="box box-1 box-bg">
+      <div data-url="images/bg-b-1.jpg">
+        <img src="images/bg-s-1.png" alt="">
+      </div>
+      <div data-url="images/bg-b-2.jpg">
+        <img src="images/bg-s-2.png" alt="">
+      </div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="box box-2 box-prop" style="display:none;">
+      <div data-url="images/person-b-1.png">
+        <img src="images/person-s-1.png" alt="">
+      </div>
+    </div>
+    <div class="box box-3" style="display:none;"></div>
+    <div class="box box-4" style="display:none;"></div>
+  </div>
+  <div class="fix-screen start-mask" style="display:none">
+    <div class="mask"></div>
+    <div class="container">
+      <div class="title"></div>
+      <div class="text"></div>
+      <div class="btn-start"></div>
+    </div>
+  </div>
+  <script src="libs/jquery.min.js"></script>
+  <script src="js/index.js"></script>
 </body>
+
 </html>

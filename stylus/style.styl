@@ -1,1 +1,72 @@
 @import '_style';
+@import '_mask';
+div
+  position relative
+  box-sizing border-box
+.modal-open
+  position fixed
+  width 100%  
+.index-container
+  width 9.36rem
+  height 100%
+  background-size 100% auto
+  .prop
+    border 1px white dashed
+    width 100px
+    position absolute
+    img 
+      width 100%
+    .del
+      width .3rem
+      height .3rem
+      background yellow 
+      position absolute  
+      top -0.15rem
+      left -0.15rem
+    .scale
+      width .3rem
+      height .3rem
+      background green 
+      position absolute  
+      top -0.15rem
+      right -0.15rem
+.props-box
+  width 7.5rem
+  height 4.2rem
+  position fixed
+  bottom 0
+  left 0
+  background url(../images/props-box.png)
+  background-size 100% 100%
+  .switch-bar
+    width 100%
+    height 1rem
+    line-height .4rem
+    text-align center
+    padding .4rem 0 .2rem 1rem
+    font-size .3rem
+    color white
+    display flex
+    >div
+      flex 1
+      margin 0 .1rem
+    .active 
+      background white
+      color black  
+    .arrow
+      background url(../imagesBase/arrow-1.png) no-repeat 30% 50%
+      background-size .19rem .17rem
+    .rotate
+      transform rotateX(180deg) 
+  .box
+    width 6.3rem
+    margin 0 auto
+    padding-top .2rem
+    >div
+      width 1.36rem
+      margin-left .2rem
+      display inline-block
+      img 
+        width 100%
+
+    
