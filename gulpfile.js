@@ -12,6 +12,8 @@ const browserify = require("browserify");
 // const sourcemaps = require("gulp-sourcemaps");
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
+const connect = require('gulp-connect');
+const proxy = require('http-proxy-middleware');
 
 
 const needRev = false;
@@ -27,35 +29,52 @@ gulp.task('compile-css', function () {
 })
 
 gulp.task('compile-es6', function () {
-  // return gulp.src('es2015/*.*')
-  //   .pipe(babel({
-  //     presets: ['env']
-  //   }))
-  //   .pipe(gulp.dest('js'))
-  var b = browserify({
-    entries: "es2015/index.js", //入口点js
-    debug: true //是告知Browserify在运行同时生成内联sourcemap用于调试
-  });
-  return b.bundle()
-    .pipe(source("index.js"))
-    .pipe(buffer())
+  return gulp.src('es2015/*.*')
     .pipe(babel({
       presets: ['env']
     }))
-    // .pipe(sourcemaps.init({ loadMaps: true }))
-    // .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest("js"));
+    .pipe(gulp.dest('js'))
+  // var b = browserify({
+  //   entries: "es2015/index.js", //入口点js
+  //   debug: true //是告知Browserify在运行同时生成内联sourcemap用于调试
+  // });
+  // return b.bundle()
+  //   .pipe(source("index.js"))
+  //   .pipe(buffer())
+  //   .pipe(babel({
+  //     presets: ['env']
+  //   }))
+  //   // .pipe(sourcemaps.init({ loadMaps: true }))
+  //   // .pipe(sourcemaps.write("."))
+  //   .pipe(gulp.dest("js"));
 })
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
-  browserSync.init({
-    files: ['css/*.css', '*.html', 'js/*.js'],
-    server: {
-      baseDir: './',  // 设置服务器的根目录
-      index: 'index.html' // 指定默认打开的文件
-    },
-    // proxy: 'localhost', // 设置本地服务器的地址
-    port: 3000  // 指定访问服务器的端口号
+  // browserSync.init({
+  //   files: ['css/*.css', '*.html', 'js/*.js'],
+  //   server: {
+  //     baseDir: './',  // 设置服务器的根目录
+  //     index: 'index.html' // 指定默认打开的文件
+  //   },
+  //   // proxy: 'localhost', // 设置本地服务器的地址
+  //   port: 3000  // 指定访问服务器的端口号
+  // });
+  connect.server({
+    root: './',
+    livereload: true,
+    port: 3000,
+    host:'192.168.1.107',
+    middleware: function (connect, opt) {
+      return [
+        proxy('/api', {
+          target: 'http://test-axatp.55hudong.com',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': ""
+          }
+        })
+      ]
+    }
   });
   gulp.watch('stylus/*.styl', ['compile-css'])
   gulp.watch('es2015/*.js', ['compile-es6'])
