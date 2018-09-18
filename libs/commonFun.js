@@ -60,3 +60,14 @@ String.prototype.checkTel = function () {
 String.prototype.checkIdcard = function () {
   return /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(this)
 }
+
+/**
+ * axios 数据data反字符串转json
+ */
+axios.defaults.transformRequest = [function (data) {
+  let ret = ''
+  for (let it in data) {
+    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+  }
+  return ret
+}];
