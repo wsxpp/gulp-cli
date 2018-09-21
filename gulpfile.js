@@ -63,7 +63,7 @@ gulp.task('serve', ['compile-css', 'compile-es6'], function () {
     root: './',
     livereload: true,
     port: 3000,
-    host:'192.168.1.107',
+    host: '192.168.1.107',
     middleware: function (connect, opt) {
       return [
         proxy('/api', {
@@ -78,6 +78,14 @@ gulp.task('serve', ['compile-css', 'compile-es6'], function () {
   });
   gulp.watch('stylus/*.styl', ['compile-css'])
   gulp.watch('es2015/*.js', ['compile-es6'])
+  gulp.watch('css/*.css', ['reload'])
+  gulp.watch('js/*.js', ['reload'])
+  gulp.watch('*.html', ['reload'])
+});
+
+gulp.task('reload', function () {
+  gulp.src('*.html')
+    .pipe(connect.reload());
 });
 
 gulp.task('clean', function () {
