@@ -17,6 +17,8 @@ const proxy = require('http-proxy-middleware');
 
 
 const needRev = false;
+const changeOrigin = false;
+const needBrowserify = false;
 
 gulp.task('compile-css', function () {
   return gulp.src('stylus/!(_)*.styl')
@@ -29,58 +31,64 @@ gulp.task('compile-css', function () {
 })
 
 gulp.task('compile-es6', function () {
-  return gulp.src('es2015/*.*')
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(gulp.dest('js'))
-  // var b = browserify({
-  //   entries: "es2015/index.js", //入口点js
-  //   debug: true //是告知Browserify在运行同时生成内联sourcemap用于调试
-  // });
-  // return b.bundle()
-  //   .pipe(source("index.js"))
-  //   .pipe(buffer())
-  //   .pipe(babel({
-  //     presets: ['env']
-  //   }))
-  //   // .pipe(sourcemaps.init({ loadMaps: true }))
-  //   // .pipe(sourcemaps.write("."))
-  //   .pipe(gulp.dest("js"));
+  if (!needBrowserify) {
+    return gulp.src('es2015/*.*')
+      .pipe(babel({
+        presets: ['env']
+      }))
+      .pipe(gulp.dest('js'))
+  } else {
+    var b = browserify({
+      entries: "es2015/index.js", //入口点js
+      debug: true //是告知Browserify在运行同时生成内联sourcemap用于调试
+    });
+    return b.bundle()
+      .pipe(source("index.js"))
+      .pipe(buffer())
+      .pipe(babel({
+        presets: ['env']
+      }))
+      // .pipe(sourcemaps.init({ loadMaps: true }))
+      // .pipe(sourcemaps.write("."))
+      .pipe(gulp.dest("js"));
+  }
 })
 
 gulp.task('serve', ['compile-css', 'compile-es6'], function () {
-  // browserSync.init({
-  //   files: ['css/*.css', '*.html', 'js/*.js'],
-  //   server: {
-  //     baseDir: './',  // 设置服务器的根目录
-  //     index: 'index.html' // 指定默认打开的文件
-  //   },
-  //   // proxy: 'localhost', // 设置本地服务器的地址
-  //   port: 3000  // 指定访问服务器的端口号
-  // });
-  connect.server({
-    root: './',
-    livereload: true,
-    port: 3000,
-    host: '192.168.1.107',
-    middleware: function (connect, opt) {
-      return [
-        proxy('/api', {
-          target: 'http://test-axatp.55hudong.com',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/api': ""
-          }
-        })
-      ]
-    }
-  });
+  if (!changeOrigin) {
+    browserSync.init({
+      files: ['css/*.css', '*.html', 'js/*.js'],
+      server: {
+        baseDir: './',  // 设置服务器的根目录
+        index: 'index.html' // 指定默认打开的文件
+      },
+      // proxy: 'localhost', // 设置本地服务器的地址
+      port: 3000  // 指定访问服务器的端口号
+    });
+  } else {
+    connect.server({
+      root: './',
+      livereload: true,
+      port: 3000,
+      host: '192.168.1.107',
+      middleware: function (connect, opt) {
+        return [
+          proxy('/api', {
+            target: 'http://test-axatp.55hudong.com',
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api': ""
+            }
+          })
+        ]
+      }
+    });
+    gulp.watch('css/*.css', ['reload'])
+    gulp.watch('*.html', ['reload'])
+  }
+  gulp.watch('js/*.js', ['reload'])
   gulp.watch('stylus/*.styl', ['compile-css'])
   gulp.watch('es2015/*.js', ['compile-es6'])
-  gulp.watch('css/*.css', ['reload'])
-  gulp.watch('js/*.js', ['reload'])
-  gulp.watch('*.html', ['reload'])
 });
 
 gulp.task('reload', function () {
@@ -94,13 +102,13 @@ gulp.task('clean', function () {
 
 gulp.task('build-images', ['clean'], function () {
   if (needRev) {
-    return gulp.src(['images/*.jpg', 'images/*.png', 'images/*.gif'])
+    return gulp.src(['images/**'])
       .pipe(rev())
       .pipe(gulp.dest('dist/images'))
       .pipe(rev.manifest())
       .pipe(gulp.dest('rev/images'));
   } else {
-    return gulp.src(['images/*.jpg', 'images/*.png', 'images/*.gif'])
+    return gulp.src(['images/**'])
       .pipe(gulp.dest('dist/images'))
   }
 })
