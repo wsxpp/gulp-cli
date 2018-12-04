@@ -1,17 +1,17 @@
 (function () {
-  var html = document.querySelector('html');
-  var init = function () {
-    var width = html.getBoundingClientRect().width;
-    width = Math.round(width); width = width > 750 ? 750 : width;
-    var fontSize = width / 750 * 100;
-    if (navigator.appVersion.indexOf("MicroMessenger") >= 0) {
-      html.style.fontSize = fontSize / (window.devicePixelRatio % 1 ? window.devicePixelRatio % 1 : 1) + "px";
-    } else {
-      html.style.fontSize = fontSize + "px";
-    }
+  var d = document.getElementsByTagName("html")[0];
+  var b = function () {
+    var e = d.getBoundingClientRect().width;
+    e = Math.round(e);
+    e = e > 750 ? 750 : e;
+    var f = e / 750 * 100;
+    d.style.fontSize = f + "px"
   };
-  init();
-  var timer;
-  var resize = function () { clearTimeout(timer); timer = setTimeout(init, 25) };
-  window.addEventListener("resize", resize)
+  b();
+  var a;
+  var c = function () {
+    clearTimeout(a);
+    a = setTimeout(b, 25)
+  };
+  window.addEventListener("resize", c)
 })();
