@@ -64,10 +64,47 @@ String.prototype.checkIdcard = function () {
 /**
  * axios 数据data反字符串转json
  */
-axios.defaults.transformRequest = [function (data) {
-  let ret = ''
-  for (let it in data) {
-    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+// axios.defaults.transformRequest = [function (data) {
+//   let ret = ''
+//   for (let it in data) {
+//     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+//   }
+//   return ret
+// }];
+
+var bindGetCode = function (time, btn_text) {
+  var btn = document.querySelector('.btn-getCode');
+  var tel = document.querySelector('.tel');
+  var time = 5; //时间间隔
+  var telNumber = "";
+  var countTime = time;
+  // 倒计时
+  var count = function () {
+    if (countTime >= 0) {
+      btn.innerHTML = countTime-- + 's';
+      setTimeout(count, 1000)
+    } else {
+      countTime = time;
+      btn.innerHTML = '获取验证码';
+      checkTel();
+    }
   }
-  return ret
-}];
+  // 检查手机号
+  var checkTel = function () {
+    if (telNumber.checkTel()) {
+      btn.classList.add('active')
+    } else {
+      btn.classList.remove('active')
+    }
+  }
+  tel.addEventListener('input', function () {
+    telNumber = this.value;
+    checkTel();
+  })
+  btn.addEventListener('click', function () {
+    if (this.classList.contains('active')) {
+      this.classList.remove('active');
+      count()
+    }
+  })
+}
