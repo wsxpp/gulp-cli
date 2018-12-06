@@ -77,6 +77,7 @@ var bindGetCode = function (time, btn_text) {
   var tel = document.querySelector('.tel');
   var time = time; //时间间隔
   var telNumber = "";
+  var counting = false;
   var countTime = time;
   // 倒计时
   var count = function () {
@@ -86,12 +87,13 @@ var bindGetCode = function (time, btn_text) {
     } else {
       countTime = time;
       btn.innerHTML = '获取验证码';
+      counting = false;
       checkTel();
     }
   }
   // 检查手机号
   var checkTel = function () {
-    if (telNumber.checkTel()) {
+    if (telNumber.checkTel() && !counting) {
       btn.classList.add('active')
     } else {
       btn.classList.remove('active')
@@ -104,6 +106,7 @@ var bindGetCode = function (time, btn_text) {
   btn.addEventListener('click', function () {
     if (this.classList.contains('active')) {
       this.classList.remove('active');
+      counting = true;
       count()
     }
   })
