@@ -29,12 +29,12 @@ var ModalHelper = (function (bodyCls) {
 var Mask = (function () {
   return {
     show: function (selector) {
-      document.querySelector(selector).hidden = false;
+      document.querySelector(selector).style.display = 'block';
       ModalHelper.afterOpen();
     },
     hide: function (selector) {
       ModalHelper.beforeClose();
-      document.querySelector(selector).hidden = true;
+      document.querySelector(selector).style.display = 'none';
     }
   };
 })();
@@ -75,7 +75,7 @@ String.prototype.checkIdcard = function () {
 var bindGetCode = function (time, btn_text) {
   var btn = document.querySelector('.btn-getCode');
   var tel = document.querySelector('.tel');
-  var time = 5; //时间间隔
+  var time = time; //时间间隔
   var telNumber = "";
   var countTime = time;
   // 倒计时
